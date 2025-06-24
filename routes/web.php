@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 // Test route to check if Laravel is working
 Route::get('/test', function () {
-    return 'Laravel is working on Google Cloud Run!';
+    return 'Laravel is working perfectly on Google Cloud Run with GitHub Actions CI/CD! 🚀';
 });
 
 Route::get('/', WelcomeController::class)->name('welcome');
