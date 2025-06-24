@@ -5,6 +5,10 @@
 /public/storage
 /storage/*.key
 /vendor
+
+# Google Cloud Service Account Keys
+github-actions-key.json
+*.json
 .env
 .env.backup
 .env.production
