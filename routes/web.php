@@ -17,6 +17,11 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 
 
+// Test route to check if Laravel is working
+Route::get('/test', function () {
+    return 'Laravel is working on Google Cloud Run!';
+});
+
 Route::get('/', WelcomeController::class)->name('welcome');
 Route::get('/e', EventIndexController::class)->name('eventIndex');
 Route::get('/e/{id}', EventShowController::class)->name('eventShow');
