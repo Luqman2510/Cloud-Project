@@ -64,7 +64,7 @@ Route::get('/debug', function () {
     }
 });
 
-// Temporary simple homepage to bypass WelcomeController
+// Fixed homepage with proper layout component
 Route::get('/', function () {
     return view('welcome', ['events' => collect([])]);
 })->name('welcome');
