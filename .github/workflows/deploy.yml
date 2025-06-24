@@ -31,6 +31,11 @@ jobs:
           exit 1
         else
           echo "✅ GCP_SA_KEY secret is configured"
+          echo "Secret length: $(echo '${{ secrets.GCP_SA_KEY }}' | wc -c)"
+          echo "First character: $(echo '${{ secrets.GCP_SA_KEY }}' | head -c 1)"
+          echo "Last character: $(echo '${{ secrets.GCP_SA_KEY }}' | tail -c 2 | head -c 1)"
+          # Test if it's valid JSON
+          echo '${{ secrets.GCP_SA_KEY }}' | jq . > /dev/null && echo "✅ Valid JSON format" || echo "❌ Invalid JSON format"
         fi
 
     - name: Authenticate to Google Cloud
