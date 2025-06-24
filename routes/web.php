@@ -22,7 +22,55 @@ Route::get('/test', function () {
     return 'Laravel is working perfectly on Google Cloud Run with GitHub Actions CI/CD! 🚀';
 });
 
-Route::get('/', WelcomeController::class)->name('welcome');
+// Debug route to test database
+Route::get('/debug', function () {
+    try {
+        $dbPath = database_path('database.sqlite');
+        $dbExists = file_exists($dbPath);
+        $dbReadable = is_readable($dbPath);
+        $dbWritable = is_writable($dbPath);
+
+        $info = [
+            'database_path' => $dbPath,
+            'database_exists' => $dbExists,
+            'database_readable' => $dbReadable,
+            'database_writable' => $dbWritable,
+            'database_size' => $dbExists ? filesize($dbPath) : 0,
+        ];
+
+        // Test database connection
+        try {
+            DB::connection()->getPdo();
+            $info['connection'] = 'SUCCESS';
+        } catch (Exception $e) {
+            $info['connection'] = 'FAILED: ' . $e->getMessage();
+        }
+
+        // Test if tables exist
+        try {
+            $info['events_table_exists'] = Schema::hasTable('events');
+            $info['locations_table_exists'] = Schema::hasTable('locations');
+            $info['tags_table_exists'] = Schema::hasTable('tags');
+        } catch (Exception $e) {
+            $info['table_check'] = 'FAILED: ' . $e->getMessage();
+        }
+
+        return response()->json($info, 200, [], JSON_PRETTY_PRINT);
+    } catch (Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500, [], JSON_PRETTY_PRINT);
+    }
+});
+
+// Temporary simple homepage to bypass WelcomeController
+Route::get('/', function () {
+    return view('welcome', ['events' => collect([])]);
+})->name('welcome');
+
+// Original route (commented out for debugging)
+// Route::get('/', WelcomeController::class)->name('welcome');
 Route::get('/e', EventIndexController::class)->name('eventIndex');
 Route::get('/e/{id}', EventShowController::class)->name('eventShow');
 // Define the route for showing the event details
